@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/">
+        <file>img/help_dark.png</file>
+        <file>img/help_light.png</file>
+        <file>img/favicon.png</file>
+    </qresource>
+</RCC>
