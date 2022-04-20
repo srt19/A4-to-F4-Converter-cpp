@@ -26,6 +26,8 @@ private slots:
 
     void on_help_button_clicked();
 
+    void on_lang_button_clicked();
+
 private:
     Ui::MainWindow *ui;
 };

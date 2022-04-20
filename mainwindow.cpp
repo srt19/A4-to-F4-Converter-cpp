@@ -7,14 +7,16 @@
 using namespace cv;
 
 std::string pic1, pic2, outpic;
-int help = 0;
+bool help;
+bool in1 = 0, in2 = 0, sav = 0;
+bool lang = 0;
+bool completed = 0;
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    ui->git->setOpenExternalLinks(1);
 }
 
 MainWindow::~MainWindow()
@@ -33,10 +35,42 @@ void MainWindow::on_img1_button_clicked()
 
     if (filename.isEmpty())
     {
-        //none
+        //YNTKTS
     }
 
-    else(ui->img1_label->setText(filename));
+    else
+    {
+     int x, y;
+     Mat img(imread(pic1));
+     x = img.size().width;
+     y = img.size().height;
+
+     if((x == 2481) || (y == 3506))
+     {
+         std::string fname = filename.toStdString();
+         std::string name = fname.substr(fname.find_last_of("/\\") + 1);
+         filename = filename.fromStdString(name);
+         ui->img1_name->setText(filename);
+         ui->img1_name->setStyleSheet("QLabel { color: rgb(0, 0, 0);}");
+         in1 = 1;
+
+         if((in1 == true) && (in2 == true) && (sav == true))
+         {
+             ui->start->setEnabled(1);
+         }
+
+         else
+         {
+             ui->start->setEnabled(0);
+         }
+     }
+
+     else{
+         ui->start->setEnabled(0);
+         ui->img1_name->setText("Please input image with 3506x2481 pixel");
+         ui->img1_name->setStyleSheet("QLabel { color: rgb(255, 0, 0);}");
+     }
+    }
 }
 
 
@@ -51,10 +85,43 @@ void MainWindow::on_img2_button_clicked()
 
     if (filename.isEmpty())
     {
-        //none
+        //YNTKTS
     }
 
-    else(ui->img2_label->setText(filename));
+    else{
+        int x, y;
+        Mat img(imread(pic2));
+        x = img.size().width;
+        y = img.size().height;
+
+        if((x == 2481) || (y == 3506))
+
+        {
+            std::string fname = filename.toStdString();
+            std::string name = fname.substr(fname.find_last_of("/\\") + 1);
+            filename = filename.fromStdString(name);
+            ui->img2_name->setText(filename);
+            ui->img2_name->setStyleSheet("QLabel { color: rgb(0, 0, 0);}");
+            in2 = 1;
+
+            if((in1 == true) && (in2 == true) && (sav == true))
+            {
+                ui->start->setEnabled(1);
+            }
+
+            else
+            {
+                ui->start->setEnabled(0);
+            }
+        }
+
+        else{
+            in2 = 0;
+            ui->start->setEnabled(0);
+            ui->img2_name->setText("Please input image with 3506x2481 pixel");
+            ui->img2_name->setStyleSheet("QLabel { color: rgb(255, 0, 0);}");
+        }
+    }
 }
 
 
@@ -66,26 +133,25 @@ void MainWindow::on_output_button_clicked()
                 "./Output/",
                 QObject::tr("Images File (*.jpg *.png *.webp)"));
     outpic = filename.toStdString();
+    std::string fname = outpic.substr(outpic.find_last_of("/\\") + 1);
+    filename = filename.fromStdString(fname);
+    ui->output_name->setText(filename);
+    sav =1;
 
-    if (filename.isEmpty())
+    if((in1 == true) && (in2 == true) && (sav == true))
     {
-     //none
+        ui->start->setEnabled(1);
     }
 
-    else(ui->output_label->setText(filename));
+    else
+    {
+        ui->start->setEnabled(0);
+    }
 }
 
 
 void MainWindow::on_start_clicked()
 {
-    if ((pic1.empty()) || (pic2.empty()) || (outpic.empty()))
-    {
-        ui->status->setText("Please input the file correctly");
-        ui->status->setStyleSheet("QLabel { color : rgb(255, 0, 0);}");
-    }
-
-    else
-    {
     Mat img1(imread(pic1));
     Mat img2(imread(pic2));
     ui->start->setEnabled(0);
@@ -135,16 +201,16 @@ void MainWindow::on_start_clicked()
 
     imwrite(outpic, a1);
     ui->start->setEnabled(1);
-    ui->status->setText("READY");
+    ui->status->setText("Completed");
     //set color
     ui->status->setStyleSheet("QLabel { color: rgb(0, 255, 0);}");
-    }
+    completed = 1;
 }
 
 
 void MainWindow::on_help_button_clicked()
 {
-    if (help == '0')
+    if (help == 0)
     {
         help = 1;
     }
@@ -152,6 +218,62 @@ void MainWindow::on_help_button_clicked()
     else
     {
         help = 0;
+    }
+}
+
+
+void MainWindow::on_lang_button_clicked()
+{
+    if(lang == false)
+    {
+        lang = 1;
+
+        ui->img1_label->setText("Gambar 1 :");
+        ui->img2_label->setText("Gambar 2 :");
+        ui->output_label->setText("File Hasil");
+        ui->img1_button->setText("Pilih File");
+        ui->img2_button->setText("Pilih File");
+        ui->output_button->setText("Pilih File");
+        ui->start->setText("Mulai");
+        ui->lang_button->setText("ID");
+
+        if(completed == false)
+        {
+            ui->status->setText("SIAP");
+            ui->status->setStyleSheet("QLabel { color: rgb(0, 255, 0);}");
+        }
+
+        else
+        {
+            ui->status->setText("SELESAI");
+            ui->status->setStyleSheet("QLabel { color: rgb(0, 255, 0);}");
+        }
+    }
+
+    else
+    {
+        lang = 0;
+
+        ui->img1_label->setText("Image 1 :");
+        ui->img2_label->setText("Image 2 :");
+        ui->output_label->setText("Output");
+        ui->img1_button->setText("Browse File");
+        ui->img2_button->setText("Browse File");
+        ui->output_button->setText("Browse File");
+        ui->start->setText("Start");
+        ui->lang_button->setText("EN");
+
+        if(completed == false)
+        {
+            ui->status->setText("READY");
+            ui->status->setStyleSheet("QLabel { color: rgb(0, 255, 0);}");
+        }
+
+        else
+        {
+            ui->status->setText("COMPLETED");
+            ui->status->setStyleSheet("QLabel { color: rgb(0, 255, 0);}");
+        }
     }
 }
 
