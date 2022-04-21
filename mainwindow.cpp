@@ -8,9 +8,7 @@ using namespace cv;
 
 std::string pic1, pic2, outpic;
 bool help;
-bool in1 = 0, in2 = 0, sav = 0;
-bool lang = 0;
-bool completed = 0;
+bool in1 = 0, in2 = 0, sav = 0, lang = 0, completed = 0, bw = 0;
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -199,7 +197,17 @@ void MainWindow::on_start_clicked()
     warpAffine(b1, b1, rota, b1.size());
     vconcat(a1, b1, a1);
 
-    imwrite(outpic, a1);
+    if(bw == true)
+    {
+        cvtColor(a1, a1, COLOR_BGR2GRAY);
+        imwrite(outpic, a1);
+    }
+
+    else
+    {
+        imwrite(outpic, a1);
+    }
+
     ui->start->setEnabled(1);
     ui->status->setText("Completed");
     //set color
@@ -236,6 +244,7 @@ void MainWindow::on_lang_button_clicked()
         ui->output_button->setText("Pilih File");
         ui->start->setText("Mulai");
         ui->lang_button->setText("ID");
+        ui->bw_check->setText("Hitam Putih");
 
         if(completed == false)
         {
@@ -262,6 +271,7 @@ void MainWindow::on_lang_button_clicked()
         ui->output_button->setText("Browse File");
         ui->start->setText("Start");
         ui->lang_button->setText("EN");
+        ui->bw_check->setText("B/W");
 
         if(completed == false)
         {
@@ -274,6 +284,21 @@ void MainWindow::on_lang_button_clicked()
             ui->status->setText("COMPLETED");
             ui->status->setStyleSheet("QLabel { color: rgb(0, 255, 0);}");
         }
+    }
+}
+
+
+void MainWindow::on_bw_check_stateChanged(int arg1)
+{
+    if(bw == false)
+
+    {
+        bw = 1;
+    }
+
+    else
+    {
+        bw = 0;
     }
 }
 

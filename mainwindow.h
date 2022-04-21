@@ -28,6 +28,8 @@ private slots:
 
     void on_lang_button_clicked();
 
+    void on_bw_check_stateChanged(int arg1);
+
 private:
     Ui::MainWindow *ui;
 };
