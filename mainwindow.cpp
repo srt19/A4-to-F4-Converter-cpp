@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
 #include <QFileDialog>
+#include <QDir>
 #include <opencv2/core/core.hpp>
 #include <opencv2/opencv.hpp>
 
@@ -24,6 +25,13 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_img1_button_clicked()
 {
+    // check input directory
+    QDir dir("./input");
+    while(!dir.exists())
+    {
+        dir.mkpath(".");
+    }
+
     QString filename = QFileDialog::getOpenFileName(
                 nullptr,
                 QObject::tr("Open Image"),
@@ -74,6 +82,12 @@ void MainWindow::on_img1_button_clicked()
 
 void MainWindow::on_img2_button_clicked()
 {
+    QDir dir("./input");
+    while(!dir.exists())
+    {
+        dir.mkpath(".");
+    }
+
     QString filename = QFileDialog::getOpenFileName(
                 nullptr,
                 QObject::tr("Open Image"),
@@ -125,6 +139,12 @@ void MainWindow::on_img2_button_clicked()
 
 void MainWindow::on_output_button_clicked()
 {
+    QDir dir("./output");
+    while(!dir.exists())
+    {
+        dir.mkpath(".");
+    }
+
     QString filename = QFileDialog::getSaveFileName(
                 nullptr,
                 QObject::tr("Open Image"),
